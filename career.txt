@@ -1,0 +1,32 @@
+# hdfs dfs -mkdir Career 
+
+# hdfs dfs -put /home/biadmin/Desktop/Career.csv Career/
+
+# cd $PIG_HOME/bin
+# ./pig
+
+
+grunt> data = LOAD '/user/biadmin/Career/Career.csv' USING PigStorage(',') as (ts: long,email: chararray,name: chararray,dob: long,age: long,cg: chararray,st: chararray, ct: chararray,yr: chararray, br: chararray, cr: chararray);  
+grunt>  cr_data = FOREACH data GENERATE cr;                         
+grunt> cr_separate= FOREACH cr_data GENERATE TOKENIZE(cr);         
+grunt> cr = FOREACH cr_separate GENERATE FLATTEN($0) AS crs;       
+grunt> cr_group= GROUP cr BY crs;                                  
+grunt> cr_count= FOREACH cr_group GENERATE group, COUNT(cr) as cnt;
+grunt> cr_sort= ORDER cr_count BY cnt DESC;                        
+grunt> cr_top10= Limit cr_sort 10;                             
+grunt> dump cr_top10; 
+
+
+
+grunt> data = LOAD '/user/biadmin/Career/Career.csv' USING PigStorage(',') as (ts: long,email: chararray,name: chararray,dob: long,age: long,cg: chararray,st: chararray, ct: chararray,yr: chararray, br: chararray, cr: chararray);  
+grunt> cr_data = FOREACH data GENERATE cr;                         
+grunt> cr_separate= FOREACH cr_data GENERATE TOKENIZE(cr);         
+grunt> cr = FOREACH cr_separate GENERATE FLATTEN($0) AS crs;       
+grunt> cr_group= GROUP cr BY crs;                                  
+grunt> cr_count= FOREACH cr_group GENERATE group, COUNT(cr) as cnt;
+grunt> cr_sort= ORDER cr_count BY cnt DESC;                        
+grunt> cr_top5= Limit cr_sort 5;                             
+grunt> dump cr_top5; 
+
+
+
